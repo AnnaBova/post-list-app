@@ -1,0 +1,12 @@
+<section class="row"  > 
+    <button (click)="addPost()">add post</button>
+  <ng-container *ngFor="let post of posts$ | async; let i=index trackBy:trackByFn(i)"> 
+      <div class="card">
+          <button class="btn" (click) = deleteItem(i)>delete</button>
+          <h2 class="card__heading">{{post.title}}</h2>
+          <p class="card__content">{{post.body}}</p>
+        </div>
+  </ng-container>
+  
+  
+</section>
