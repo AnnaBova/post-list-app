@@ -1,36 +1,30 @@
-import { Post } from '../post';
-import { PostService } from '../core/post.service';
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Post } from "../post";
+import { PostService } from "../core/post.service";
+import { Component, OnInit } from "@angular/core";
+import { Observable } from "rxjs/Observable";
 
 @Component({
-  selector: 'app-posts-list',
-  templateUrl: './posts-list.component.html',
-  styleUrls: ['./posts-list.component.scss']
+  selector: "app-posts-list",
+  templateUrl: "./posts-list.component.html",
+  styleUrls: ["./posts-list.component.scss"]
 })
 export class PostsListComponent implements OnInit {
-
-  constructor(private postService: PostService) { }
+  constructor(private postService: PostService) {}
   posts$: Observable<Post[]>;
-
   ngOnInit() {
-    this.loadPostsList();
+    this.loadPosts();
   }
-
-  deleteItem(i) {
-    this.postService.deletePost(i);
+  loadPosts() {
+    this.postService.fetchPosts();
+    this.posts$ = this.postService.posts$;
   }
-
-  loadPostsList() {
-    if (!this.posts$) {
-      this.postService.getPosts().subscribe( value => {
-        this.postService.posts$.next(value);
-        this.posts$ = this.postService.posts$;
-      });
-    }
+  deletePost(id) {
+    this.postService.deletePost(id).subscribe(() => this.loadPosts());
   }
-
-  trackByFn(index, item) {
-    return index;
+  addToStorage(post) {
+    this.postService.setPost(post);
+  }
+  trackByFn(item) {
+    return item.id;
   }
 }
